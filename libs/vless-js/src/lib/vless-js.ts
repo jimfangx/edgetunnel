@@ -170,7 +170,7 @@ export async function processSocket({
           const rawClientData = vlessBuffer.slice(rawDataIndex);
           await remoteConnection!.write(new Uint8Array(rawClientData));
           let chunkDatas = [new Uint8Array([version[0], 0])];
-          // let sizes = 0;
+          let sizes = 0;
           // get response from remoteConnection
           remoteConnection!.readable
             .pipeTo(
@@ -180,9 +180,9 @@ export async function processSocket({
                 },
                 async write(chunk, controller) {
                   // ('' as any).toLowerCase1();
-                  // sizes += chunk.length;
-                  // console.log('response size--', chunk.length);
-                  // console.log('totoal size--', sizes);
+                  sizes += chunk.length;
+                  console.log('response size--', chunk.length);
+                  console.log('totoal size--', sizes);
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process
