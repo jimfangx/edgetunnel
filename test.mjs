@@ -1,10 +1,25 @@
-import { ReadableStream } from 'stream/web';
+import { ReadableStream, TransformStream } from 'stream/web';
 
 try {
+  // const { readable, writable } = new TransformStream();
+
+  // const defaultWriter = writable.getWriter();
+
+  // defaultWriter.write('1111');
+  let i = 0;
   const readableStream = new ReadableStream({
     start(control) {
-      setInterval(() => {
-        control.enqueue('11');
+      const timers = setInterval(() => {
+        control.enqueue(i++);
+
+        if (i === 7) {
+          setTimeout(() => {
+            control.close();
+          }, 100);
+
+          // clearInterval(timers);
+          // console.log('----readableStream --locked---', readableStream.locked);
+        }
       }, 100);
     },
     pull(control) {
@@ -15,17 +30,30 @@ try {
       //   undefined.length;
     },
     cancel(reason) {
-      console.log('---------', reason);
+      console.log('----readableStream cancel-----', reason);
+      console.log('----readableStream --locked---', readableStream.locked);
+      // console.log(
+      //   '----readableStream --locked---',
+      //   readableStream.getReader().closed
+      // );
     },
   });
 
   setTimeout(() => {
-    console.log('cancel');
-  }, 2000);
+    // readableStream.cancel('xxxxxxxxxxxxxxx');
+    // defaultWriter.close();
+    // console.log('cancel');
+    // setTimeout(() => {
+    //   readable.console.log('locked', readable.locked);
+    // }, 1000);
+  }, 1000);
 
   await readableStream.pipeTo(
     new WritableStream({
       write(chunk, controller) {
+        if (i === 7) {
+          controller.error('WritableStream has error when 7');
+        }
         console.log(chunk);
       },
       close() {
@@ -40,5 +68,5 @@ try {
   //     console.log(iterator);
   //   }
 } catch (error) {
-  console.log('---end---', error);
+  console.log('-catch--end---', error);
 }

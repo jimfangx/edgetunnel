@@ -39,7 +39,7 @@ export async function processSocket({
       pull(controller) {},
       cancel(reason) {
         console.log(`[${address}:${port}] websocketStream is cancel`, reason);
-        socket.close();
+        closeWebSocket(socket);
       },
     });
     let remoteConnection: {
@@ -195,10 +195,11 @@ export async function processSocket({
                   console.error(
                     `[${address}:${port}] remoteConnection!.readable is close`
                   );
-                  socket.close();
+                  // if websocket is open, then close
+                  closeWebSocket(socket);
                 },
                 abort(reason) {
-                  socket.close();
+                  closeWebSocket(socket);
                   console.error(
                     `[${address}:${port}] remoteConnection!.readable abort`,
                     reason
@@ -207,7 +208,7 @@ export async function processSocket({
               })
             )
             .catch((error: any) => {
-              socket.close();
+              closeWebSocket(socket);
               console.error(
                 `[${address}:${port}] remoteConnection.readable has error`,
                 error
@@ -223,13 +224,19 @@ export async function processSocket({
             reason
           );
           remoteConnection?.close();
-          socket.close();
+          closeWebSocket(socket);
         },
       })
     );
   } catch (error: any) {
     console.error(`[${address}:${port}] processSocket`, error);
-    socket.close();
+    closeWebSocket(socket);
   }
   return;
+}
+
+function closeWebSocket(socket: WebSocket) {
+  if (socket.readyState === 1) {
+    socket.close();
+  }
 }
