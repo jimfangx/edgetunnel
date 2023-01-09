@@ -2,8 +2,8 @@ export function vlessJs(): string {
   return 'vless-js';
 }
 
-const m1 = 1024 * 10;
-const m5 = m1 * 10;
+const m1 = 1024 * 1024;
+const m5 = m1 * 5;
 const m10 = m5 * 10;
 
 function delay(ms: number) {
@@ -206,12 +206,15 @@ export async function processSocket({
 
                   // custom websocket backpressure, not very good!!
                   if (socket.bufferedAmount > m10) {
+                    console.log('> 10m');
                     await delay(50);
                     socket.send(chunk);
                   } else if (socket.bufferedAmount > m5) {
+                    console.log('> 5m');
                     await delay(5);
                     socket.send(chunk);
                   } else if (socket.bufferedAmount > m1) {
+                    console.log('> 1m');
                     await delay(1);
                     socket.send(chunk);
                   } else {
