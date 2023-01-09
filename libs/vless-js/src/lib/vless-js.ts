@@ -211,6 +211,7 @@ export async function processSocket({
                   // casue v2ray client can't process.
                   chunkTimeCount++;
                   if (chunkTimeCount > 10 && chunkTimeCount < 20) {
+                    console.error(`[${address}:${port}] delay`);
                     await delay(100);
                     socket.send(chunk);
                   } else {
