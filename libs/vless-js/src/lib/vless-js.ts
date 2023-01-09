@@ -208,23 +208,25 @@ export async function processSocket({
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process.
 
+                  await delay(50);
+                  socket.send(chunk);
                   // custom websocket backpressure, not very good!!
-                  if (socket.bufferedAmount > m10) {
-                    console.log('> 10m');
-                    await delay(50);
-                    socket.send(chunk);
-                  } else if (socket.bufferedAmount > m5) {
-                    console.log('> 5m');
-                    await delay(5);
-                    socket.send(chunk);
-                  } else if (socket.bufferedAmount > m1) {
-                    console.log('> 1m');
-                    await delay(1);
-                    socket.send(chunk);
-                  } else {
-                    console.log('< 1m');
-                    socket.send(chunk);
-                  }
+                  // if (socket.bufferedAmount > m10) {
+                  //   console.log('> 10m');
+                  //   await delay(50);
+                  //   socket.send(chunk);
+                  // } else if (socket.bufferedAmount > m5) {
+                  //   console.log('> 5m');
+                  //   await delay(5);
+                  //   socket.send(chunk);
+                  // } else if (socket.bufferedAmount > m1) {
+                  //   console.log('> 1m');
+                  //   await delay(1);
+                  //   socket.send(chunk);
+                  // } else {
+                  //   console.log('< 1m');
+                  //   socket.send(chunk);
+                  // }
                 },
                 close() {
                   console.error(
