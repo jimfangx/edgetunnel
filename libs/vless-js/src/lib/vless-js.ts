@@ -195,10 +195,14 @@ export async function processSocket({
                 async write(chunk, controller) {
                   // ('' as any).toLowerCase1();
                   // sizes += chunk.length;
-                  // console.log(
-                  //   `[${address}:${port}] response size--`,
-                  //   chunk.length
-                  // );
+                  console.log(
+                    `[${address}:${port}] response size--`,
+                    chunk.length
+                  );
+                  console.log(
+                    `[${address}:${port}] socket bufferedAmount--`,
+                    socket.bufferedAmount / 1024
+                  );
                   // console.log(`[${address}:${port}] totoal size--`, sizes);
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
