@@ -210,10 +210,10 @@ export async function processSocket({
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process.
                   let now = Date.now();
-
                   if (now - lastTime < 20) {
                     chunkTimeCount++;
                   }
+                  lastTime = now;
                   // await delay(70);
                   // socket.send(chunk);
                   // normally one chunk is 64kb when download files
@@ -225,7 +225,6 @@ export async function processSocket({
                   } else {
                     socket.send(chunk);
                   }
-                  lastTime = now;
                 },
                 close() {
                   console.error(
