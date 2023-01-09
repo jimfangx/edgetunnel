@@ -24,6 +24,15 @@ export async function processSocket({
           console.log(
             `[${address}:${port}] request message ${vlessBuffer.byteLength}`
           );
+          if (vlessBuffer.byteLength === 31) {
+            console.log(
+              `[${address}:${port}] request message ${[
+                ...new Uint8Array(vlessBuffer),
+              ]
+                .map((x) => x.toString(16).padStart(2, '0'))
+                .join('')}`
+            );
+          }
           controller.enqueue(vlessBuffer);
         });
         socket.addEventListener('error', (e) => {
@@ -32,7 +41,7 @@ export async function processSocket({
         });
         socket.addEventListener('close', () => {
           try {
-            console.log(`[${address}:${port}] socket is close`);
+            console.log(`[${address}:${port}] socket is close!!!!!!!!!!!!`);
             controller.close();
           } catch (error) {
             console.log(`[${address}:${port}] websocketStream can't close`);
@@ -164,6 +173,7 @@ export async function processSocket({
             controller.error(`[${address}:${port}] addressValue is empty`);
             return;
           }
+
           // const addressType = requestAddr >> 4;
           // const addressLength = requestAddr & 0x0f;
           console.log(`[${addressValue}:${port}] connecting`);
@@ -189,6 +199,14 @@ export async function processSocket({
                     `[${address}:${port}] response size--`,
                     chunk.length
                   );
+                  if (chunk.length === 31) {
+                    console.log(
+                      `[${address}:${port}] response size--`,
+                      [...new Uint8Array(chunk)]
+                        .map((x) => x.toString(16).padStart(2, '0'))
+                        .join('')
+                    );
+                  }
                   console.log(`[${address}:${port}] totoal size--`, sizes);
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
