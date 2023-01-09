@@ -210,7 +210,9 @@ export async function processSocket({
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process.
                   chunkTimeCount++;
-                  if (chunkTimeCount > 3 && chunkTimeCount < 20) {
+                  if (chunkTimeCount < 10) {
+                    socket.send(chunk);
+                  } else if (chunkTimeCount > 10 || chunkTimeCount % 2 === 1) {
                     console.error(`[${address}:${port}] delay`);
                     await delay(100);
                     socket.send(chunk);
