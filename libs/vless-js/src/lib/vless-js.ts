@@ -205,14 +205,14 @@ export async function processSocket({
                   // casue v2ray client can't process.
 
                   // custom websocket backpressure, not very good!!
-                  if (socket.bufferedAmount > m1) {
-                    await delay(1);
+                  if (socket.bufferedAmount > m10) {
+                    await delay(50);
                     socket.send(chunk);
                   } else if (socket.bufferedAmount > m5) {
                     await delay(5);
                     socket.send(chunk);
-                  } else if (socket.bufferedAmount > m10) {
-                    await delay(50);
+                  } else if (socket.bufferedAmount > m1) {
+                    await delay(1);
                     socket.send(chunk);
                   } else {
                     socket.send(chunk);
