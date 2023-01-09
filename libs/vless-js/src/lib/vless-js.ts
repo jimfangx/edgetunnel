@@ -212,7 +212,7 @@ export async function processSocket({
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process
                   await new Promise((res, rej) => {
-                    setTimeout(res, 2);
+                    setTimeout(res, 10);
                   });
                   socket.send(chunk);
                 },
