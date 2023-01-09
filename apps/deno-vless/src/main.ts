@@ -28,6 +28,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
   const { socket, response } = Deno.upgradeWebSocket(req);
   socket.addEventListener('open', () => {});
+  console.log('----begin -', socket.bufferedAmount);
 
   processSocket({
     userID,
