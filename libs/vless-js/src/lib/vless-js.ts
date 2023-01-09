@@ -201,7 +201,7 @@ export async function processSocket({
                   );
                   console.log(
                     `[${address}:${port}] socket bufferedAmount--`,
-                    socket.bufferedAmount / 1024
+                    socket.bufferedAmount
                   );
                   // console.log(`[${address}:${port}] totoal size--`, sizes);
 
@@ -222,6 +222,7 @@ export async function processSocket({
                     await delay(1);
                     socket.send(chunk);
                   } else {
+                    console.log('< 1m');
                     socket.send(chunk);
                   }
                 },
