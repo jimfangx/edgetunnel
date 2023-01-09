@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.170.0/http/server.ts';
+import { serve, serveTls } from 'https://deno.land/std@0.170.0/http/server.ts';
 import * as uuid from 'https://jspm.dev/uuid';
 import * as lodash from 'https://jspm.dev/lodash-es';
 import { serveClient } from './deno/client.ts';
@@ -50,4 +50,11 @@ globalThis.addEventListener('beforeunload', (e) => {
 globalThis.addEventListener('unload', (e) => {
   console.log('Exiting');
 });
-serve(handler, { port: 8080, hostname: '0.0.0.0' });
+// serve(handler, { port: 8080, hostname: '0.0.0.0' });
+
+serveTls(handler, {
+  port: 8081,
+  hostname: '0.0.0.0',
+  certFile: '/root/config/cert/cert.pem',
+  keyFile: '/root/config/cert/key.pem',
+});
