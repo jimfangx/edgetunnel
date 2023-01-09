@@ -210,7 +210,7 @@ export async function processSocket({
                   console.log(`[${address}:${port}] totoal size--`, sizes);
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
-                  // casue v2ray client can't process
+                  // casue v2ray client can't process.
                   await new Promise((res, rej) => {
                     setTimeout(res, 10);
                   });
