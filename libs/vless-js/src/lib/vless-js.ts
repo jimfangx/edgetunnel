@@ -217,11 +217,13 @@ export async function processSocket({
                   // normally one chunk is 64kb when download files
                   if (chunkTimeCount > 20) {
                     console.error(`[${address}:${port}] delay`);
-                    await delay(100);
+                    await delay(50);
                     socket.send(chunk);
                     chunkTimeCount--;
+                  } else {
+                    socket.send(chunk);
                   }
-                  socket.send(chunk);
+
                   lastTime = now;
                 },
                 close() {
