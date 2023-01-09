@@ -186,6 +186,8 @@ export async function processSocket({
           let chunkDatas = [new Uint8Array([version[0], 0])];
           // let sizes = 0;
           // get response from remoteConnection
+          let lastTime = Date.now();
+          let chunkTimeCount = 0;
           remoteConnection!.readable
             .pipeTo(
               new WritableStream({
@@ -207,26 +209,19 @@ export async function processSocket({
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process.
+                  let now = Date.now();
 
-                  await delay(50);
+                  if (now - lastTime < 20) {
+                    chunkTimeCount++;
+                  }
+                  // normally one chunk is 64kb when download files
+                  if (chunkTimeCount > 20) {
+                    await delay(50);
+                    socket.send(chunk);
+                    chunkTimeCount--;
+                  }
                   socket.send(chunk);
-                  // custom websocket backpressure, not very good!!
-                  // if (socket.bufferedAmount > m10) {
-                  //   console.log('> 10m');
-                  //   await delay(50);
-                  //   socket.send(chunk);
-                  // } else if (socket.bufferedAmount > m5) {
-                  //   console.log('> 5m');
-                  //   await delay(5);
-                  //   socket.send(chunk);
-                  // } else if (socket.bufferedAmount > m1) {
-                  //   console.log('> 1m');
-                  //   await delay(1);
-                  //   socket.send(chunk);
-                  // } else {
-                  //   console.log('< 1m');
-                  //   socket.send(chunk);
-                  // }
+                  lastTime = now;
                 },
                 close() {
                   console.error(
