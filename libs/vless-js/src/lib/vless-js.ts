@@ -202,8 +202,8 @@ export async function processSocket({
                     chunk.length
                   );
                   console.log(
-                    `[${address}:${port}] socket bufferedAmount--`,
-                    socket.bufferedAmount
+                    `[${address}:${port}] chunkTimeCount--`,
+                    chunkTimeCount
                   );
                   // console.log(`[${address}:${port}] totoal size--`, sizes);
 
@@ -216,6 +216,7 @@ export async function processSocket({
                   }
                   // normally one chunk is 64kb when download files
                   if (chunkTimeCount > 20) {
+                    console.error(`[${address}:${port}] delay`);
                     await delay(100);
                     socket.send(chunk);
                     chunkTimeCount--;
