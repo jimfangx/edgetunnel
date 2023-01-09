@@ -221,7 +221,6 @@ export async function processSocket({
                     console.error(`[${address}:${port}] delay`);
                     await delay(100);
                     socket.send(chunk);
-                    chunkTimeCount--;
                   } else {
                     socket.send(chunk);
                   }
