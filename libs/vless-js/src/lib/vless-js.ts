@@ -2,6 +2,16 @@ export function vlessJs(): string {
   return 'vless-js';
 }
 
+const m1 = 1024 * 10;
+const m5 = m1 * 10;
+const m10 = m5 * 10;
+
+function delay(ms: number) {
+  return new Promise((resolve, rej) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 export async function processSocket({
   userID,
   socket,
@@ -21,18 +31,9 @@ export async function processSocket({
       start(controller) {
         socket.addEventListener('message', async (e) => {
           const vlessBuffer: ArrayBuffer = e.data;
-          console.log(
-            `[${address}:${port}] request message ${vlessBuffer.byteLength}`
-          );
-          if (vlessBuffer.byteLength === 31) {
-            console.log(
-              `[${address}:${port}] request message ${[
-                ...new Uint8Array(vlessBuffer),
-              ]
-                .map((x) => x.toString(16).padStart(2, '0'))
-                .join('')}`
-            );
-          }
+          // console.log(
+          //   `[${address}:${port}] request message ${vlessBuffer.byteLength}`
+          // );
           controller.enqueue(vlessBuffer);
         });
         socket.addEventListener('error', (e) => {
@@ -183,7 +184,7 @@ export async function processSocket({
           const rawClientData = vlessBuffer.slice(rawDataIndex);
           await remoteConnection!.write(new Uint8Array(rawClientData));
           let chunkDatas = [new Uint8Array([version[0], 0])];
-          let sizes = 0;
+          // let sizes = 0;
           // get response from remoteConnection
           remoteConnection!.readable
             .pipeTo(
@@ -193,28 +194,29 @@ export async function processSocket({
                 },
                 async write(chunk, controller) {
                   // ('' as any).toLowerCase1();
-                  sizes += chunk.length;
-
-                  console.log(
-                    `[${address}:${port}] response size--`,
-                    chunk.length
-                  );
-                  if (chunk.length === 31) {
-                    console.log(
-                      `[${address}:${port}] response size--`,
-                      [...new Uint8Array(chunk)]
-                        .map((x) => x.toString(16).padStart(2, '0'))
-                        .join('')
-                    );
-                  }
-                  console.log(`[${address}:${port}] totoal size--`, sizes);
+                  // sizes += chunk.length;
+                  // console.log(
+                  //   `[${address}:${port}] response size--`,
+                  //   chunk.length
+                  // );
+                  // console.log(`[${address}:${port}] totoal size--`, sizes);
 
                   // https://github.com/zizifn/edgetunnel/issues/87, hack for this issue, maybe websocket sent too many small chunk,
                   // casue v2ray client can't process.
-                  await new Promise((res, rej) => {
-                    setTimeout(res, 100);
-                  });
-                  socket.send(chunk);
+
+                  // custom websocket backpressure, not very good!!
+                  if (socket.bufferedAmount > m1) {
+                    await delay(1);
+                    socket.send(chunk);
+                  } else if (socket.bufferedAmount > m5) {
+                    await delay(5);
+                    socket.send(chunk);
+                  } else if (socket.bufferedAmount > m10) {
+                    await delay(50);
+                    socket.send(chunk);
+                  } else {
+                    socket.send(chunk);
+                  }
                 },
                 close() {
                   console.error(
