@@ -215,16 +215,16 @@ export async function processSocket({
                     chunkTimeCount++;
                   }
                   // await delay(70);
-                  socket.send(chunk);
+                  // socket.send(chunk);
                   // normally one chunk is 64kb when download files
-                  // if (chunkTimeCount > 20) {
-                  //   console.error(`[${address}:${port}] delay`);
-                  //   await delay(70);
-                  //   socket.send(chunk);
-                  //   chunkTimeCount--;
-                  // } else {
-                  //   socket.send(chunk);
-                  // }
+                  if (chunkTimeCount > 20) {
+                    console.error(`[${address}:${port}] delay`);
+                    await delay(70);
+                    socket.send(chunk);
+                    chunkTimeCount--;
+                  } else {
+                    socket.send(chunk);
+                  }
                   lastTime = now;
                 },
                 close() {
