@@ -21,10 +21,12 @@ const handler = async (req: Request): Promise<Response> => {
   socket.addEventListener('message', async (e) => {
     if (e.data === '20m') {
       let totoal = 0;
+      let count = 0;
       const response = await fetch('https://zizi.press:8888/20m');
       const body = response.body;
       for await (let chunk of body!) {
         console.log((totoal += chunk.length));
+        socket.send((count++).toString());
         socket.send(chunk);
       }
       socket.send('done');
@@ -43,11 +45,11 @@ globalThis.addEventListener('beforeunload', (e) => {
 globalThis.addEventListener('unload', (e) => {
   console.log('Exiting');
 });
-// serve(handler, { port: 8081, hostname: '0.0.0.0' });
+serve(handler, { port: 8081, hostname: '0.0.0.0' });
 
-serveTls(handler, {
-  port: 8081,
-  hostname: '0.0.0.0',
-  certFile: '/root/config/cert/cert.pem',
-  keyFile: '/root/config/cert/key.pem',
-});
+// serveTls(handler, {
+//   port: 8081,
+//   hostname: '0.0.0.0',
+//   certFile: '/root/config/cert/cert.pem',
+//   keyFile: '/root/config/cert/key.pem',
+// });
