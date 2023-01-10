@@ -220,7 +220,8 @@ export async function processSocket({
                     datas = [];
                   } else {
                     await delay(100);
-                    datas.push(chunk);
+                    socket.send(chunk);
+                    // datas.push(chunk);
                   }
 
                   // normally one chunk is 64kb when download files
@@ -233,7 +234,7 @@ export async function processSocket({
                   // }
                 },
                 close() {
-                  console.error(
+                  console.log(
                     `[${address}:${port}] remoteConnection!.readable is close`
                   );
                   // if websocket is open, then close
