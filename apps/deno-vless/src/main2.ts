@@ -40,11 +40,11 @@ const handler = async (req: Request): Promise<Response> => {
   return response;
 };
 
-serve(handler, { port: 8081, hostname: '0.0.0.0' });
+// serve(handler, { port: 8081, hostname: '0.0.0.0' });
 
-// serveTls(handler, {
-//   port: 8081,
-//   hostname: '0.0.0.0',
-//   certFile: '/root/config/cert/cert.pem',
-//   keyFile: '/root/config/cert/key.pem',
-// });
+serveTls(handler, {
+  port: 8081,
+  hostname: '0.0.0.0',
+  certFile: '/root/config/cert/cert.pem',
+  keyFile: '/root/config/cert/key.pem',
+});
