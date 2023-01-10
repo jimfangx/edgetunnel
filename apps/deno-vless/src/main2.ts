@@ -19,12 +19,13 @@ const handler = async (req: Request): Promise<Response> => {
   socket.addEventListener('open', () => {});
 
   socket.addEventListener('message', async (e) => {
-    const vlessBuffer: ArrayBuffer = e.data;
-    // console.log(
-    //   `[${address}:${port}] request message ${vlessBuffer.byteLength}`
-    // );
     if (e.data === '20m') {
-      socket.send(' 20m');
+      const response = await fetch('https://zizi.press:8888/20m');
+      const body = response.body;
+      for await (let chunk of body!) {
+        console.log(chunk.length);
+        socket.send(chunk);
+      }
     } else {
       socket.send('not 20m');
     }
