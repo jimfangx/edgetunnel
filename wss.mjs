@@ -16,8 +16,9 @@ wss.on('connection', function connection(ws) {
         console.log(
           `${(totoal += chunk.length)}, count: ${count.toString()}, ${
             chunk.length
-          }`
+          },  bufferedAmount ${ws.bufferedAmount} `
         );
+
         ws.send(count.toString());
         ws.send(chunk);
       }
