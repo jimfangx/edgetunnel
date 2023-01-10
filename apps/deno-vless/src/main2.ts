@@ -25,8 +25,9 @@ const handler = async (req: Request): Promise<Response> => {
     // );
     if (e.data === '20m') {
       socket.send(' 20m');
+    } else {
+      socket.send('not 20m');
     }
-    socket.send('not 20m');
   });
 
   return response;
