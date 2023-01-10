@@ -22,12 +22,13 @@ const handler = async (req: Request): Promise<Response> => {
 
       const body = response.body;
       for await (let chunk of body!) {
+        count++
         console.log(
-          `${(totoal += chunk.length)}, count: ${(count++).toString()}, ${
+          `${(totoal += chunk.length)}, count: ${().toString()}, ${
             chunk.length
           }`
         );
-        socket.send((count++).toString());
+        socket.send((count).toString());
         socket.send(chunk);
       }
       socket.send('done');
