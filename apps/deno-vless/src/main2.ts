@@ -18,6 +18,10 @@ const handler = async (req: Request): Promise<Response> => {
       let totoal = 0;
       let count = 0;
       // const response = await fetch('https://zizi.press:8888/20m');
+      const remoteSocket = await Deno.connect({
+        port: 443,
+        hostname: e.data,
+      });
       const response = await fetch(e.data);
 
       const body = response.body;
