@@ -26,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
   if (upgrade.toLowerCase() != 'websocket') {
     return await serveClient(req, userID);
   }
-  const { socket, response } = Deno.upgradeWebSocket(req);
+  const { socket, response } = Deno.upgradeWebSocket(req, {});
   socket.addEventListener('open', () => {});
   console.log('----begin -', socket.bufferedAmount);
 
@@ -51,11 +51,11 @@ globalThis.addEventListener('beforeunload', (e) => {
 globalThis.addEventListener('unload', (e) => {
   console.log('Exiting');
 });
-// serve(handler, { port: 8080, hostname: '0.0.0.0' });
+serve(handler, { port: 8081, hostname: '0.0.0.0' });
 
-serveTls(handler, {
-  port: 8081,
-  hostname: '0.0.0.0',
-  certFile: '/root/config/cert/cert.pem',
-  keyFile: '/root/config/cert/key.pem',
-});
+// serveTls(handler, {
+//   port: 8081,
+//   hostname: '0.0.0.0',
+//   certFile: '/root/config/cert/cert.pem',
+//   keyFile: '/root/config/cert/key.pem',
+// });
