@@ -188,6 +188,7 @@ export async function processSocket({
           // get response from remoteConnection
           let lastTime = Date.now();
           let chunkTimeCount = 0;
+          let datas: BlobPart[] = [];
           remoteConnection!.readable
             .pipeTo(
               new WritableStream({
@@ -212,12 +213,13 @@ export async function processSocket({
                   chunkTimeCount++;
                   if (chunkTimeCount < 3) {
                     socket.send(chunk);
-                  } else if (chunkTimeCount < 20) {
+                  } else if (chunkTimeCount % 10 === 0) {
                     console.error(`[${address}:${port}] delay`);
                     await delay(100);
-                    socket.send(chunk);
+                    socket.send(new Blob(datas));
+                    datas = [];
                   } else {
-                    socket.send(chunk);
+                    datas.push(chunk);
                   }
 
                   // normally one chunk is 64kb when download files
