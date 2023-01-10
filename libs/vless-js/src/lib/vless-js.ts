@@ -219,6 +219,7 @@ export async function processSocket({
                     socket.send(new Blob(datas));
                     datas = [];
                   } else {
+                    console.log(`[${address}:${port}] delay--`);
                     await delay(100);
                     socket.send(chunk);
                     // datas.push(chunk);
