@@ -213,12 +213,13 @@ export async function processSocket({
                   chunkTimeCount++;
                   if (chunkTimeCount < 3) {
                     socket.send(chunk);
-                  } else if (chunkTimeCount % 10 === 0) {
+                  } else if (false) {
                     console.error(`[${address}:${port}] delay`);
                     await delay(100);
                     socket.send(new Blob(datas));
                     datas = [];
                   } else {
+                    await delay(100);
                     datas.push(chunk);
                   }
 
