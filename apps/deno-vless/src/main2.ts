@@ -14,15 +14,15 @@ const handler = async (req: Request): Promise<Response> => {
   socket.addEventListener('open', () => {});
 
   socket.addEventListener('message', async (e) => {
-    if (e.data === '20m') {
+    if ((e.data as string).startsWith('https://')) {
       let totoal = 0;
       let count = 0;
       // const response = await fetch('https://zizi.press:8888/20m');
-      const response = await fetch('https://cachefly.cachefly.net/100mb.test');
+      const response = await fetch(e.data);
 
       const body = response.body;
       for await (let chunk of body!) {
-        console.log((totoal += chunk.length));
+        console.log(`${(totoal += chunk.length)}, ${chunk.length}`);
         socket.send((count++).toString());
         socket.send(chunk);
       }
